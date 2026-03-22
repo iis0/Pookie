@@ -23,6 +23,10 @@
   --font-display: "Press Start 2P", monospace;
   --font-body: "Genova", sans-serif;
   --font-decorative: "7pxkbus", monospace;
+
+  --spacing-page-x: 40px;
+  --nav-height: 57px;
+  --border-width: 0.5px;
 }
 
 @theme inline {
@@ -36,6 +40,10 @@
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-decorative: var(--font-decorative);
+
+  --spacing-page-x: var(--spacing-page-x);
+  --spacing-nav-height: var(--nav-height);
+  --border-width-thin: var(--border-width);
 }
 
 body {

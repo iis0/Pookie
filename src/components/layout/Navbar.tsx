@@ -1,5 +1,6 @@
 "use client";
 
+import { SOCIALS } from "@/utils/consts";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +16,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b-[0.5px] border-red-faint px-[40px] shrink-0">
+    <nav className="border-b-thin border-red-faint px-page-x shrink-0">
       <div className="grid grid-cols-3 items-center py-[10px]">
         {/* Logo */}
         <Link href="/" className="flex items-end justify-self-start">
@@ -37,7 +38,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`font-[family-name:var(--font-body)] text-[14px] uppercase tracking-[0.56px] transition-colors hover:text-soft-white ${
+                className={`font-body text-[14px] uppercase tracking-[0.56px] transition-colors hover:text-soft-white ${
                   isActive ? "text-soft-white" : "text-soft-white-muted"
                 }`}
               >
@@ -50,7 +51,7 @@ export default function Navbar() {
         {/* Social */}
         <div className="flex items-center justify-self-end">
           <a
-            href="https://instagram.com"
+            href={SOCIALS.instagram}
             target="_blank"
             rel="noopener noreferrer"
             className="opacity-55 hover:opacity-80 transition-opacity"

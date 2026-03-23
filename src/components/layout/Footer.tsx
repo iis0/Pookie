@@ -1,11 +1,5 @@
 import { SOCIALS } from "@/utils/consts";
 
-const footerLinks = [
-  { label: "Gallery", href: "/gallery" },
-  { label: "Shop", href: "/shop" },
-  { label: "Contact", href: "/contact" },
-];
-
 export default function Footer() {
   return (
     <footer className="border-t-thin border-red-faint px-page-x py-[18px] flex items-center justify-between">

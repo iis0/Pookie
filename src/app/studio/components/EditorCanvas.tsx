@@ -254,7 +254,7 @@ export default function EditorCanvas({
         <h1 className="font-display text-[14px] text-red tracking-[1.84px] m-0">
           POOKIE STUDIO
         </h1>
-        <span className="font-display text-[8px] text-soft-white-muted tracking-[0.4px]">
+        <span className="font-body text-[12px] text-soft-white-muted tracking-[0.4px]">
           {gridSize}&times;{gridSize}px
         </span>
       </div>
@@ -274,7 +274,7 @@ export default function EditorCanvas({
       <div className="mt-4 flex gap-3">
         <button
           onClick={exportPNG}
-          className="font-display text-[10px] tracking-[0.72px] py-[7px] px-5 bg-red text-black border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.15]"
+          className="font-body text-[14px] font-medium tracking-[0.72px] py-[7px] px-5 bg-red text-black border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.15]"
         >
           EXPORT PNG
         </button>

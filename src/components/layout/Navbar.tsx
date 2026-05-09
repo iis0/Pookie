@@ -17,7 +17,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b-thin border-red-faint px-page-x shrink-0">
+    <nav className="sticky top-0 z-50 border-b-thin border-red-faint px-page-x shrink-0 bg-black/70 backdrop-blur-md">
       <div className="grid grid-cols-3 items-center py-[10px]">
         {/* Logo */}
         <Link href="/" className="flex items-end justify-self-start">

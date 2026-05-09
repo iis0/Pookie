@@ -29,7 +29,7 @@ export default function PaletteSidebar({
           className="w-8 h-8 shrink-0 border-thin border-red-faint"
           style={{ background: activeColor }}
         />
-        <span className="font-display text-[7px] text-soft-white-muted tracking-[0.5px]">
+        <span className="font-body text-[11px] text-soft-white-muted tracking-[0.5px]">
           {activeColor.toUpperCase()}
         </span>
       </div>
@@ -75,24 +75,24 @@ export default function PaletteSidebar({
               setActiveColor(e.target.value);
           }}
           maxLength={7}
-          className="flex-1 font-display text-[8px] text-soft-white bg-transparent border-thin border-red-faint py-1.5 px-2 tracking-[0.5px] outline-none"
+          className="flex-1 font-body text-[11px] text-soft-white bg-transparent border-thin border-red-faint py-1.5 px-2 tracking-[0.5px] outline-none"
         />
       </div>
 
       {/* Info blocks */}
       <div className="mt-4 flex justify-between items-center py-1.5 border-b-thin border-red-faint">
-        <span className="font-display text-[6px] text-soft-white-muted tracking-[0.8px]">
+        <span className="font-body text-[10px] text-soft-white-muted tracking-[0.8px]">
           TOOL
         </span>
-        <span className="font-display text-[7px] text-soft-white tracking-[0.5px]">
+        <span className="font-body text-[11px] text-soft-white tracking-[0.5px]">
           {activeTool.toUpperCase()}
         </span>
       </div>
       <div className="mt-4 flex justify-between items-center py-1.5 border-b-thin border-red-faint">
-        <span className="font-display text-[6px] text-soft-white-muted tracking-[0.8px]">
+        <span className="font-body text-[10px] text-soft-white-muted tracking-[0.8px]">
           HISTORY
         </span>
-        <span className="font-display text-[7px] text-soft-white tracking-[0.5px]">
+        <span className="font-body text-[11px] text-soft-white tracking-[0.5px]">
           {historyLength} STEPS
         </span>
       </div>

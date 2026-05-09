@@ -10,6 +10,7 @@ interface ToolsSidebarProps {
   showGrid: boolean;
   setShowGrid: (show: boolean) => void;
   onUndo: () => void;
+  onRedo: () => void;
   onClear: () => void;
 }
 
@@ -21,6 +22,7 @@ export default function ToolsSidebar({
   showGrid,
   setShowGrid,
   onUndo,
+  onRedo,
   onClear,
 }: ToolsSidebarProps) {
   return (
@@ -38,7 +40,7 @@ export default function ToolsSidebar({
               key={tool.id}
               onClick={() => setActiveTool(tool.id)}
               title={tool.label}
-              className={`flex flex-col items-center gap-1 py-2.5 px-1 border-thin font-display cursor-pointer transition-all duration-150 ${
+              className={`flex flex-col items-center gap-1 py-2.5 px-1 border-thin font-body cursor-pointer transition-all duration-150 ${
                 isActive
                   ? "bg-red text-black border-red"
                   : "bg-transparent text-soft-white border-red-faint"
@@ -62,7 +64,7 @@ export default function ToolsSidebar({
             <button
               key={size}
               onClick={() => setGridSize(size)}
-              className={`py-1.5 border-thin font-display text-[8px] cursor-pointer transition-all duration-150 text-center ${
+              className={`py-1.5 border-thin font-body text-[10px] cursor-pointer transition-all duration-150 text-center ${
                 isActive
                   ? "bg-red text-black border-red"
                   : "bg-transparent text-soft-white border-red-faint"
@@ -77,7 +79,7 @@ export default function ToolsSidebar({
       {/* Toggle grid */}
       <button
         onClick={() => setShowGrid(!showGrid)}
-        className={`mt-4 py-[7px] px-3 border-thin border-red-faint font-display text-[7px] text-soft-white cursor-pointer tracking-[0.72px] transition-all duration-150 text-center ${
+        className={`mt-4 py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white cursor-pointer tracking-[0.72px] transition-all duration-150 text-center ${
           showGrid ? "bg-red-subtle" : "bg-transparent"
         }`}
       >
@@ -88,13 +90,19 @@ export default function ToolsSidebar({
       <div className="mt-6 flex flex-col gap-2">
         <button
           onClick={onUndo}
-          className="py-[7px] px-3 border-thin border-red-faint font-display text-[7px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
+          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
         >
           UNDO
         </button>
         <button
+          onClick={onRedo}
+          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
+        >
+          REDO
+        </button>
+        <button
           onClick={onClear}
-          className="py-[7px] px-3 border-thin border-red-faint font-display text-[7px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
+          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
         >
           CLEAR
         </button>

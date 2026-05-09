@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
 /* ─────────────────────────────────────────────
@@ -249,7 +250,7 @@ export default function PixelEditor() {
   );
 
   const handleMouseUp = useCallback(
-    (e) => {
+    () => {
       if (preview && dragStart.current) {
         setGrid((prev) => {
           const copy = prev.map((r) => [...r]);

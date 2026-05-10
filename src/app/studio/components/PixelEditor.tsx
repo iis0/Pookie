@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { type ToolId } from "../lib/consts";
 import { type Grid, createEmptyGrid } from "../lib/utils";
 import ToolsSidebar from "./ToolsSidebar";
 import PaletteSidebar from "./PaletteSidebar";
 import EditorCanvas from "./EditorCanvas";
-// import KatakanaDivider from "@/components/layout/KatakanaDivider";
 
 interface HistoryStore {
   state: Grid[];
   currentIndex: number;
+
 }
 
 export default function PixelEditor() {
@@ -24,13 +24,15 @@ export default function PixelEditor() {
   });
   const [showGrid, setShowGrid] = useState(true);
 
-  // Reset grid on size change
-  useEffect(() => {
-    setGrid(createEmptyGrid(gridSize));
+  const handleGridSizeChange = useCallback((newSize: number) => {
+    setGridSize(newSize);
+    setGrid(createEmptyGrid(newSize));
     setHistory({ state: [], currentIndex: 0 });
-  }, [gridSize]);
+  }, [])
 
-  const pushHistory = useCallback(() => {
+  const pushHistory = () => {
+    console.log('--- GRID ---')
+    console.log(grid)
     setHistory(({ state }) => {
       const newState = [...state, grid];
       return {
@@ -38,40 +40,62 @@ export default function PixelEditor() {
         currentIndex: newState.length - 1,
       };
     });
-  }, [grid]);
+  };
 
-  const undo = useCallback(() => {
-    const { state } = history;
-
-    console.log("state length: ", state.length);
+  const undo = () => {
+    const { state, currentIndex } = history;
+    let newIndex = currentIndex - 1; 
+    let newState: Grid[] = [];
 
     if (state.length === 0) return;
-    setGrid(state[state.length - 1]);
-    setHistory(({ state: s, currentIndex }) => ({
-      // state: s.slice(0, -1),
-      state: s,
-      currentIndex: currentIndex - 1,
-    }));
-  }, [history]);
+    // currentIndex is offset by one (initial blank state added to history)
+    if (state.length == currentIndex + 1) {
+      console.log('BLOOODCLART')
+      newState = [...state, grid]
+      newIndex += 1;
+    }
+    else {
+      newState = state;
+    }
 
-  const redo = useCallback(() => {
+    console.log('--- UNDO ---')
+    console.log("state length: ", newState.length);
+    console.log("current index: ", currentIndex);
+    console.log("new index: ", newIndex);
+    console.log("state: ", newState);
+
+    setGrid(state[newIndex]); 
+    setHistory({
+      state: newState,
+      currentIndex: newIndex,
+    });
+  };
+
+  const redo = () => {
     const { state, currentIndex } = history;
+    const nextIndex = currentIndex + 1;
+
+    console.log('--- REDO ---')
+    console.log("state length: ", state.length);
+    console.log("current index: ", currentIndex);
+    console.log("new index: ", nextIndex);
+    console.log("state: ", state);
 
     if (state.length === currentIndex) return;
-    setGrid(state[state.length + 1]);
-    setHistory(({ state: s, currentIndex: c }) => ({
+    setGrid(state[nextIndex]);
+    setHistory({
       state,
-      currentIndex: c + 1,
-    }));
-  }, []);
+      currentIndex: nextIndex,
+    });
+  };
 
-  const clearCanvas = useCallback(() => {
+  const clearCanvas = () => {
     setHistory(({ state, currentIndex }) => ({
       state: [...state, grid],
       currentIndex,
     }));
     setGrid(createEmptyGrid(gridSize));
-  }, [grid, gridSize]);
+  };
 
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -79,7 +103,7 @@ export default function PixelEditor() {
         activeTool={activeTool}
         setActiveTool={setActiveTool}
         gridSize={gridSize}
-        setGridSize={setGridSize}
+        setGridSize={handleGridSizeChange}
         showGrid={showGrid}
         setShowGrid={setShowGrid}
         onUndo={undo}

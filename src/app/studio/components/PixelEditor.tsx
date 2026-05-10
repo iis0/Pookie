@@ -44,25 +44,19 @@ export default function PixelEditor() {
 
   const undo = () => {
     const { state, currentIndex } = history;
+    const isMissingLatestState = (state.length === currentIndex + 1 ) && (grid !== state[state.length - 1])
     let newIndex = currentIndex - 1; 
     let newState: Grid[] = [];
 
     if (state.length === 0) return;
     // currentIndex is offset by one (initial blank state added to history)
-    if (state.length == currentIndex + 1) {
-      console.log('BLOOODCLART')
+    if (isMissingLatestState) {
       newState = [...state, grid]
       newIndex += 1;
     }
     else {
       newState = state;
     }
-
-    console.log('--- UNDO ---')
-    console.log("state length: ", newState.length);
-    console.log("current index: ", currentIndex);
-    console.log("new index: ", newIndex);
-    console.log("state: ", newState);
 
     setGrid(state[newIndex]); 
     setHistory({
@@ -75,13 +69,7 @@ export default function PixelEditor() {
     const { state, currentIndex } = history;
     const nextIndex = currentIndex + 1;
 
-    console.log('--- REDO ---')
-    console.log("state length: ", state.length);
-    console.log("current index: ", currentIndex);
-    console.log("new index: ", nextIndex);
-    console.log("state: ", state);
-
-    if (state.length === currentIndex) return;
+    if (state.length === currentIndex + 1) return;
     setGrid(state[nextIndex]);
     setHistory({
       state,

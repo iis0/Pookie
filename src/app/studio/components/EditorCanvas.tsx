@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import type p5Type from "p5";
 import { CANVAS_SIZE, type ToolId } from "../lib/consts";
-import { type Grid, floodFill, bresenhamLine } from "../lib/utils";
+import { Grid } from '../lib/types'
+import { floodFill, bresenhamLine } from "../lib/utils";
+import ExportDialog from "./ExportDialog";
 
 interface EditorCanvasProps {
   grid: Grid;
@@ -30,6 +32,7 @@ export default function EditorCanvas({
   const p5Ref = useRef<p5Type | null>(null);
   const dragStart = useRef<{ row: number; col: number } | null>(null);
   const previewRef = useRef<[number, number][] | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
 
   // Keep mutable refs in sync so the p5 draw loop reads current values
   const gridRef = useRef(grid);
@@ -211,7 +214,7 @@ export default function EditorCanvas({
     [getCellFromEvent, applyTool, activeTool]
   );
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = () => {
     const preview = previewRef.current;
     if (preview && dragStart.current) {
       setGrid((prev) => {
@@ -224,25 +227,35 @@ export default function EditorCanvas({
     }
     dragStart.current = null;
     previewRef.current = null;
-  }, [activeColor, setGrid]);
+  };
 
-  const exportPNG = () => {
+  const exportPNG = (filename: string, targetRes: number) => {
+    const scale =
+      targetRes > 0 ? Math.max(1, Math.floor(targetRes / gridSize)) : 1;
+    const size = gridSize * scale;
+
     const expCanvas = document.createElement("canvas");
-    expCanvas.width = gridSize;
-    expCanvas.height = gridSize;
+    expCanvas.width = size;
+    expCanvas.height = size;
     const ctx = expCanvas.getContext("2d")!;
-    ctx.fillStyle = "#080808";
-    ctx.fillRect(0, 0, gridSize, gridSize);
+    ctx.imageSmoothingEnabled = false;
+    // ctx.fillStyle = "#080808";
+    // ctx.fillRect(0, 0, size, size);
+
     for (let r = 0; r < gridSize; r++) {
       for (let c = 0; c < gridSize; c++) {
         if (grid[r][c]) {
           ctx.fillStyle = grid[r][c]!;
-          ctx.fillRect(c, r, 1, 1);
+          ctx.fillRect(c * scale, r * scale, scale, scale);
         }
       }
     }
+
+    const safeName =
+      filename.trim().replace(/[\\/]/g, "-") ||
+      `pookie-pixel-${gridSize}x${gridSize}`;
     const link = document.createElement("a");
-    link.download = `pookie-pixel-${gridSize}x${gridSize}.png`;
+    link.download = `${safeName}.png`;
     link.href = expCanvas.toDataURL();
     link.click();
   };
@@ -273,12 +286,20 @@ export default function EditorCanvas({
       {/* Export */}
       <div className="mt-4 flex gap-3">
         <button
-          onClick={exportPNG}
+          onClick={() => setExportOpen(true)}
           className="font-body text-[14px] font-medium tracking-[0.72px] py-[7px] px-5 bg-red text-black border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.15]"
         >
           EXPORT PNG
         </button>
       </div>
+
+      <ExportDialog
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        onExport={exportPNG}
+        grid={grid}
+        gridSize={gridSize}
+      />
     </div>
   );
 }

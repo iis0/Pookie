@@ -1,4 +1,4 @@
-export type Grid = (string | null)[][];
+import { Grid } from "./types";
 
 export function createEmptyGrid(size: number): Grid {
   return Array.from({ length: size }, () => Array(size).fill(null));

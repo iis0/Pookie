@@ -12,6 +12,8 @@ interface ToolsSidebarProps {
   onUndo: () => void;
   onRedo: () => void;
   onClear: () => void;
+  onSave: () => void;
+  onLoad: () => void;
 }
 
 export default function ToolsSidebar({
@@ -24,6 +26,8 @@ export default function ToolsSidebar({
   onUndo,
   onRedo,
   onClear,
+  onSave,
+  onLoad,
 }: ToolsSidebarProps) {
   return (
     <div className="w-[200px] shrink-0 border-r-thin border-red-faint p-4 flex flex-col overflow-y-auto">
@@ -105,6 +109,18 @@ export default function ToolsSidebar({
           className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
         >
           CLEAR
+        </button>
+        <button
+          onClick={onLoad}
+          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
+        >
+          LOAD
+        </button>
+        <button
+          onClick={onSave}
+          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
+        >
+          SAVE
         </button>
       </div>
     </div>

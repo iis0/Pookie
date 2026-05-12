@@ -1,38 +1,39 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { type ToolId } from "../lib/consts";
-import { type Grid, createEmptyGrid } from "../lib/utils";
+import { Grid, SaveData, HistoryStore, GridSize } from "../lib/types";
+import { createEmptyGrid } from "../lib/utils";
 import ToolsSidebar from "./ToolsSidebar";
 import PaletteSidebar from "./PaletteSidebar";
 import EditorCanvas from "./EditorCanvas";
 
-interface HistoryStore {
-  state: Grid[];
-  currentIndex: number;
-
-}
-
 export default function PixelEditor() {
-  const [gridSize, setGridSize] = useState(16);
+  const [gridSize, setGridSize] = useState<GridSize>(16);
   const [activeTool, setActiveTool] = useState<ToolId>("pencil");
   const [activeColor, setActiveColor] = useState("#a11212");
   const [grid, setGrid] = useState<Grid>(() => createEmptyGrid(16));
+
   const [history, setHistory] = useState<HistoryStore>({
     state: [],
     currentIndex: 0,
   });
   const [showGrid, setShowGrid] = useState(true);
 
-  const handleGridSizeChange = useCallback((newSize: number) => {
+  const isMissingLatestState = useMemo(() => {
+    const { state, currentIndex } = history;
+    return (
+      state.length === currentIndex + 1 && grid !== state[state.length - 1]
+    );
+  }, [history, grid]);
+
+  const handleGridSizeChange = useCallback((newSize: GridSize) => {
     setGridSize(newSize);
     setGrid(createEmptyGrid(newSize));
     setHistory({ state: [], currentIndex: 0 });
-  }, [])
+  }, []);
 
   const pushHistory = () => {
-    console.log('--- GRID ---')
-    console.log(grid)
     setHistory(({ state }) => {
       const newState = [...state, grid];
       return {
@@ -44,21 +45,19 @@ export default function PixelEditor() {
 
   const undo = () => {
     const { state, currentIndex } = history;
-    const isMissingLatestState = (state.length === currentIndex + 1 ) && (grid !== state[state.length - 1])
-    let newIndex = currentIndex - 1; 
+    let newIndex = currentIndex - 1;
     let newState: Grid[] = [];
 
     if (state.length === 0) return;
     // currentIndex is offset by one (initial blank state added to history)
     if (isMissingLatestState) {
-      newState = [...state, grid]
+      newState = [...state, grid];
       newIndex += 1;
-    }
-    else {
+    } else {
       newState = state;
     }
 
-    setGrid(state[newIndex]); 
+    setGrid(state[newIndex]);
     setHistory({
       state: newState,
       currentIndex: newIndex,
@@ -85,6 +84,64 @@ export default function PixelEditor() {
     setGrid(createEmptyGrid(gridSize));
   };
 
+  const save = () => {
+    const saveState = isMissingLatestState ? [...history.state, grid] : history.state;
+    const saveCurrentIndex = isMissingLatestState ? history.currentIndex + 1 : history.currentIndex;
+    const saveData: SaveData = {
+      history: {
+        ...history,
+        state: saveState,
+        currentIndex: saveCurrentIndex,
+      },
+      gridSize,
+    };
+
+    const jsonData = JSON.stringify(saveData);
+    const blob = new Blob([jsonData], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.download = "save.json";
+    link.href = url;
+    link.click();
+  };
+
+  const load = () => {
+    const input = document.createElement("input");
+
+    input.type = "file";
+    input.accept = "application/json";
+
+    input.onchange = (event) => {
+      console.log("-- Start");
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      console.log("-- File loaded");
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const result = e.target?.result as string;
+          const parsed = JSON.parse(result) as SaveData;
+          const { currentIndex } = parsed.history;
+
+          setHistory(parsed.history);
+          setGrid(parsed.history.state[currentIndex]);
+          setGridSize(parsed.gridSize ?? gridSize);
+
+          console.log("Size: ", parsed.gridSize)
+        } catch (err) {
+          console.error("Failed to load file: ", err);
+        }
+      };
+
+      reader.readAsText(file);
+    };
+
+    input.click();
+  };
+
   return (
     <div className="flex flex-1 overflow-hidden">
       <ToolsSidebar
@@ -97,6 +154,8 @@ export default function PixelEditor() {
         onUndo={undo}
         onRedo={redo}
         onClear={clearCanvas}
+        onSave={save}
+        onLoad={load}
       />
 
       {/* <KatakanaDivider /> */}

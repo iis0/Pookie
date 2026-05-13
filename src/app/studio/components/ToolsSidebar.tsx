@@ -1,13 +1,14 @@
 "use client";
 
-import { Button } from "@/components/input";
+import { Button, SegmentControl } from "@/components/input";
 import { TOOLS, GRID_PRESETS, type ToolId } from "../lib/consts";
 import { GridSize } from "../lib/types";
+import ToolSection from "@/components/layout/ToolSection";
 
 interface ToolsSidebarProps {
   activeTool: ToolId;
   setActiveTool: (tool: ToolId) => void;
-  gridSize: number;
+  gridSize: GridSize;
   setGridSize: (size: GridSize) => void;
   showGrid: boolean;
   setShowGrid: (show: boolean) => void;
@@ -44,57 +45,42 @@ export default function ToolsSidebar({
     { onClick: onSave, label: "save" },
   ];
   return (
-    <div className="w-[200px] shrink-0 border-r-thin border-red-faint p-4 flex flex-col overflow-y-auto">
-      <h2 className="font-display text-[8px] text-red tracking-[1.5px] uppercase mb-3">
-        Tools
-      </h2>
-
+    <div className="w-[200px] shrink-0 border-r-thin border-red-faint p-4 flex flex-col overflow-y-auto gap-5">
       {/* Tool grid */}
-      <div className="grid grid-cols-2 gap-1.5">
-        {TOOLS.map((tool) => {
-          const isActive = activeTool === tool.id;
-          return (
-            <Button
-              key={tool.id}
-              onClick={() => setActiveTool(tool.id)}
-              title={tool.label}
-              buttonType="secondary"
-              className={`flex flex-col items-center gap-1 py-2.5 px-1 ${
-                isActive
-                  ? "bg-red text-black border-red"
-                  : "bg-transparent text-soft-white border-red-faint"
-              }`}
-            >
-              <span className="text-[18px] leading-none">{tool.icon}</span>
-              <span className="text-[6px] tracking-[0.8px]">{tool.label}</span>
-            </Button>
-          );
-        })}
-      </div>
+      <ToolSection title="tools">
+        <div className="grid grid-cols-2 gap-1.5">
+          {TOOLS.map((tool) => {
+            const isActive = activeTool === tool.id;
+            return (
+              <Button
+                key={tool.id}
+                onClick={() => setActiveTool(tool.id)}
+                title={tool.label}
+                buttonType="secondary"
+                className={`flex flex-col items-center gap-1 py-2.5 px-1 ${
+                  isActive
+                    ? "bg-red text-black border-red"
+                    : "bg-transparent text-soft-white border-red-faint"
+                }`}
+              >
+                <span className="text-[18px] leading-none">{tool.icon}</span>
+                <span className="text-[6px] tracking-[0.8px]">
+                  {tool.label}
+                </span>
+              </Button>
+            );
+          })}
+        </div>
+      </ToolSection>
 
-      {/* Grid size */}
-      <h2 className="font-display text-[8px] text-red tracking-[1.5px] uppercase mb-3 mt-6">
-        Grid
-      </h2>
-      <div className="grid grid-cols-2 gap-1.5">
-        {GRID_PRESETS.map((size) => {
-          const isActive = gridSize === size;
-          return (
-            <Button
-              key={size}
-              onClick={() => setGridSize(size)}
-              buttonType="secondary"
-              className={`text-[10px] ${
-                isActive
-                  ? "bg-red text-black border-red hover:text-soft-white"
-                  : "bg-transparent text-soft-white border-red-faint"
-              }`}
-            >
-              {size}
-            </Button>
-          );
-        })}
-      </div>
+      {/* Grid Size */}
+      <ToolSection title="grid">
+        <SegmentControl<GridSize>
+          options={GRID_PRESETS.map((size) => ({ label: size.toString(), value: size}))}
+          setValue={(value) => setGridSize(value)}
+          value={gridSize}
+        />
+      </ToolSection>
 
       {/* Toggle grid */}
       <Button

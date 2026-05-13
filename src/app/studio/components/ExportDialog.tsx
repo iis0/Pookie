@@ -94,7 +94,7 @@ export default function ExportDialog({
       >
         <h2
           id="export-dialog-title"
-          className="font-display text-[14px] text-red tracking-[1.84px] m-0"
+          className="font-display text-[14px] text-red tracking-[1.84px]"
         >
           EXPORT PNG
         </h2>

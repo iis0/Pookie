@@ -111,6 +111,7 @@ export default function PixelEditor() {
 
     input.type = "file";
     input.accept = "application/json";
+    input.style.display = "none";
 
     input.onchange = (event) => {
       console.log("-- Start");
@@ -129,8 +130,6 @@ export default function PixelEditor() {
           setHistory(parsed.history);
           setGrid(parsed.history.state[currentIndex]);
           setGridSize(parsed.gridSize ?? gridSize);
-
-          console.log("Size: ", parsed.gridSize)
         } catch (err) {
           console.error("Failed to load file: ", err);
         }
@@ -139,6 +138,7 @@ export default function PixelEditor() {
       reader.readAsText(file);
     };
 
+    document.body.appendChild(input);
     input.click();
   };
 

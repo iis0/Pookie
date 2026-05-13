@@ -3,9 +3,10 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 import type p5Type from "p5";
 import { CANVAS_SIZE, type ToolId } from "../lib/consts";
-import { Grid } from '../lib/types'
+import { Grid } from "../lib/types";
 import { floodFill, bresenhamLine } from "../lib/utils";
 import ExportDialog from "./ExportDialog";
+import { Button } from "@/components/input";
 
 interface EditorCanvasProps {
   grid: Grid;
@@ -141,11 +142,10 @@ export default function EditorCanvas({
       const cs = CANVAS_SIZE / gridSize;
       const col = Math.floor(x / cs);
       const row = Math.floor(y / cs);
-      if (row < 0 || row >= gridSize || col < 0 || col >= gridSize)
-        return null;
+      if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return null;
       return { row, col };
     },
-    [gridSize]
+    [gridSize],
   );
 
   const applyTool = useCallback(
@@ -166,7 +166,7 @@ export default function EditorCanvas({
         return copy;
       });
     },
-    [activeTool, activeColor, gridSize, setGrid, setActiveColor]
+    [activeTool, activeColor, gridSize, setGrid, setActiveColor],
   );
 
   const handleMouseDown = useCallback(
@@ -180,7 +180,7 @@ export default function EditorCanvas({
         applyTool(cell.row, cell.col);
       }
     },
-    [getCellFromEvent, applyTool, pushHistory, activeTool]
+    [getCellFromEvent, applyTool, pushHistory, activeTool],
   );
 
   const handleMouseMove = useCallback(
@@ -194,7 +194,7 @@ export default function EditorCanvas({
           dragStart.current.row,
           dragStart.current.col,
           cell.row,
-          cell.col
+          cell.col,
         );
       } else if (activeTool === "rect" && dragStart.current) {
         const pts: [number, number][] = [];
@@ -204,14 +204,13 @@ export default function EditorCanvas({
         const c1 = Math.max(dragStart.current.col, cell.col);
         for (let r = r0; r <= r1; r++)
           for (let c = c0; c <= c1; c++)
-            if (r === r0 || r === r1 || c === c0 || c === c1)
-              pts.push([r, c]);
+            if (r === r0 || r === r1 || c === c0 || c === c1) pts.push([r, c]);
         previewRef.current = pts;
       } else if (activeTool === "pencil" || activeTool === "eraser") {
         applyTool(cell.row, cell.col);
       }
     },
-    [getCellFromEvent, applyTool, activeTool]
+    [getCellFromEvent, applyTool, activeTool],
   );
 
   const handleMouseUp = () => {
@@ -264,9 +263,9 @@ export default function EditorCanvas({
     <div className="flex-1 flex flex-col items-center py-5 px-6 min-w-0">
       {/* Header */}
       <div className="flex items-baseline gap-4 mb-4 w-full max-w-[512px] justify-between">
-        <h1 className="font-display text-[14px] text-red tracking-[1.84px] m-0">
+        {/* <h1 className="font-display text-[14px] text-red tracking-[1.84px] m-0">
           POOKIE STUDIO
-        </h1>
+        </h1> */}
         <span className="font-body text-[12px] text-soft-white-muted tracking-[0.4px]">
           {gridSize}&times;{gridSize}px
         </span>
@@ -285,12 +284,7 @@ export default function EditorCanvas({
 
       {/* Export */}
       <div className="mt-4 flex gap-3">
-        <button
-          onClick={() => setExportOpen(true)}
-          className="font-body text-[14px] font-medium tracking-[0.72px] py-[7px] px-5 bg-red text-black border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.15]"
-        >
-          EXPORT PNG
-        </button>
+        <Button onClick={() => setExportOpen(true)} className="font-medium">EXPORT PNG</Button>
       </div>
 
       <ExportDialog

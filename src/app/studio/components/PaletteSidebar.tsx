@@ -26,7 +26,7 @@ export default function PaletteSidebar({
       {/* Active color preview */}
       <div className="flex items-center gap-2.5 mb-4">
         <div
-          className="w-8 h-8 shrink-0 border-thin border-red-faint"
+          className="w-8 h-8 shrink-0 border-1 border-red-faint"
           style={{ background: activeColor }}
         />
         <span className="font-body text-[11px] text-soft-white-muted tracking-[0.5px]">
@@ -65,7 +65,7 @@ export default function PaletteSidebar({
           type="color"
           value={activeColor}
           onChange={(e) => setActiveColor(e.target.value)}
-          className="w-8 h-8 p-0 border-thin border-red-faint bg-transparent cursor-pointer"
+          className="w-8 h-8 p-0 border-1 border-red-faint bg-transparent cursor-pointer"
         />
         <input
           type="text"
@@ -75,7 +75,7 @@ export default function PaletteSidebar({
               setActiveColor(e.target.value);
           }}
           maxLength={7}
-          className="flex-1 font-body text-[11px] text-soft-white bg-transparent border-thin border-red-faint py-1.5 px-2 tracking-[0.5px] outline-none"
+          className="flex-1 font-body text-[11px] text-soft-white bg-transparent border-1 border-red-faint py-1.5 px-2 tracking-[0.5px] outline-none"
         />
       </div>
 

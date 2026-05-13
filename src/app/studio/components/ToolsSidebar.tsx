@@ -1,12 +1,14 @@
 "use client";
 
+import { Button } from "@/components/input";
 import { TOOLS, GRID_PRESETS, type ToolId } from "../lib/consts";
+import { GridSize } from "../lib/types";
 
 interface ToolsSidebarProps {
   activeTool: ToolId;
   setActiveTool: (tool: ToolId) => void;
   gridSize: number;
-  setGridSize: (size: number) => void;
+  setGridSize: (size: GridSize) => void;
   showGrid: boolean;
   setShowGrid: (show: boolean) => void;
   onUndo: () => void;
@@ -14,6 +16,11 @@ interface ToolsSidebarProps {
   onClear: () => void;
   onSave: () => void;
   onLoad: () => void;
+}
+
+interface Action {
+  onClick: () => void;
+  label: string;
 }
 
 export default function ToolsSidebar({
@@ -29,6 +36,13 @@ export default function ToolsSidebar({
   onSave,
   onLoad,
 }: ToolsSidebarProps) {
+  const actionList: Action[] = [
+    { onClick: onUndo, label: "undo" },
+    { onClick: onRedo, label: "redo" },
+    { onClick: onClear, label: "clear" },
+    { onClick: onLoad, label: "load" },
+    { onClick: onSave, label: "save" },
+  ];
   return (
     <div className="w-[200px] shrink-0 border-r-thin border-red-faint p-4 flex flex-col overflow-y-auto">
       <h2 className="font-display text-[8px] text-red tracking-[1.5px] uppercase mb-3">
@@ -40,11 +54,12 @@ export default function ToolsSidebar({
         {TOOLS.map((tool) => {
           const isActive = activeTool === tool.id;
           return (
-            <button
+            <Button
               key={tool.id}
               onClick={() => setActiveTool(tool.id)}
               title={tool.label}
-              className={`flex flex-col items-center gap-1 py-2.5 px-1 border-thin font-body cursor-pointer transition-all duration-150 ${
+              buttonType="secondary"
+              className={`flex flex-col items-center gap-1 py-2.5 px-1 ${
                 isActive
                   ? "bg-red text-black border-red"
                   : "bg-transparent text-soft-white border-red-faint"
@@ -52,7 +67,7 @@ export default function ToolsSidebar({
             >
               <span className="text-[18px] leading-none">{tool.icon}</span>
               <span className="text-[6px] tracking-[0.8px]">{tool.label}</span>
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -65,63 +80,45 @@ export default function ToolsSidebar({
         {GRID_PRESETS.map((size) => {
           const isActive = gridSize === size;
           return (
-            <button
+            <Button
               key={size}
               onClick={() => setGridSize(size)}
-              className={`py-1.5 border-thin font-body text-[10px] cursor-pointer transition-all duration-150 text-center ${
+              buttonType="secondary"
+              className={`text-[10px] ${
                 isActive
-                  ? "bg-red text-black border-red"
+                  ? "bg-red text-black border-red hover:text-soft-white"
                   : "bg-transparent text-soft-white border-red-faint"
               }`}
             >
               {size}
-            </button>
+            </Button>
           );
         })}
       </div>
 
       {/* Toggle grid */}
-      <button
+      <Button
         onClick={() => setShowGrid(!showGrid)}
-        className={`mt-4 py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white cursor-pointer tracking-[0.72px] transition-all duration-150 text-center ${
-          showGrid ? "bg-red-subtle" : "bg-transparent"
+        buttonType="secondary"
+        className={`mt-4 py-[7px] px-3 text-[10px] font-normal ${
+          showGrid ? "bg-red-subtle disabled:bg-red-subtle" : "bg-transparent"
         }`}
       >
         {showGrid ? "GRID ON" : "GRID OFF"}
-      </button>
+      </Button>
 
       {/* Actions */}
       <div className="mt-6 flex flex-col gap-2">
-        <button
-          onClick={onUndo}
-          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
-        >
-          UNDO
-        </button>
-        <button
-          onClick={onRedo}
-          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
-        >
-          REDO
-        </button>
-        <button
-          onClick={onClear}
-          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
-        >
-          CLEAR
-        </button>
-        <button
-          onClick={onLoad}
-          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
-        >
-          LOAD
-        </button>
-        <button
-          onClick={onSave}
-          className="py-[7px] px-3 border-thin border-red-faint font-body text-[10px] text-soft-white bg-transparent cursor-pointer tracking-[0.72px] transition-all duration-150 text-center"
-        >
-          SAVE
-        </button>
+        {actionList.map((item, index) => (
+          <Button
+            key={index}
+            onClick={item.onClick}
+            buttonType="secondary"
+            className="py-[7px] px-3 !text-[10px] font-normal"
+          >
+            {item.label}
+          </Button>
+        ))}
       </div>
     </div>
   );

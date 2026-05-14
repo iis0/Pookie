@@ -281,7 +281,9 @@ export default function EditorCanvas({
 
       {/* Export */}
       <div className="mt-4 flex gap-3">
-        <Button onClick={() => setExportOpen(true)} className="font-medium">EXPORT PNG</Button>
+        <Button onClick={() => setExportOpen(true)} className="font-medium">
+          EXPORT PNG
+        </Button>
       </div>
 
       <ExportDialog

@@ -9,10 +9,10 @@ import PaletteSidebar from "./PaletteSidebar";
 import EditorCanvas from "./EditorCanvas";
 
 export default function PixelEditor() {
-  const [gridSize, setGridSize] = useState<GridSize>(32);
   const [activeTool, setActiveTool] = useState<ToolId>("pencil");
   const [activeColor, setActiveColor] = useState("#a11212");
-  const [grid, setGrid] = useState<Grid>(() => createEmptyGrid(16));
+  const [grid, setGrid] = useState<Grid>(() => createEmptyGrid(32));
+  const gridSize = grid.length as GridSize;
 
   const [history, setHistory] = useState<HistoryStore>({
     state: [],
@@ -28,7 +28,6 @@ export default function PixelEditor() {
   }, [history, grid]);
 
   const handleGridSizeChange = useCallback((newSize: GridSize) => {
-    setGridSize(newSize);
     setGrid(createEmptyGrid(newSize));
     setHistory({ state: [], currentIndex: 0 });
   }, []);
@@ -114,11 +113,8 @@ export default function PixelEditor() {
     input.style.display = "none";
 
     input.onchange = (event) => {
-      console.log("-- Start");
       const file = (event.target as HTMLInputElement).files?.[0];
       if (!file) return;
-
-      console.log("-- File loaded");
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -129,7 +125,6 @@ export default function PixelEditor() {
 
           setHistory(parsed.history);
           setGrid(parsed.history.state[currentIndex]);
-          setGridSize(parsed.gridSize ?? gridSize);
         } catch (err) {
           console.error("Failed to load file: ", err);
         }

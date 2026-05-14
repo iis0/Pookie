@@ -36,7 +36,7 @@ export default function SegmentControl<T>({
               isActive
                 ? "bg-red-subtle hover:text-soft-white hover:text-white"
                 : "bg-transparent"
-            } ${className}`,
+            }`, className
           ))}
         >
           {label}

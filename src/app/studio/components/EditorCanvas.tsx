@@ -263,9 +263,6 @@ export default function EditorCanvas({
     <div className="flex-1 flex flex-col items-center py-5 px-6 min-w-0">
       {/* Header */}
       <div className="flex items-baseline gap-4 mb-4 w-full max-w-[512px] justify-between">
-        {/* <h1 className="font-display text-[14px] text-red tracking-[1.84px] m-0">
-          POOKIE STUDIO
-        </h1> */}
         <span className="font-body text-[12px] text-soft-white-muted tracking-[0.4px]">
           {gridSize}&times;{gridSize}px
         </span>

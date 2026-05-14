@@ -9,7 +9,7 @@ import PaletteSidebar from "./PaletteSidebar";
 import EditorCanvas from "./EditorCanvas";
 
 export default function PixelEditor() {
-  const [gridSize, setGridSize] = useState<GridSize>(16);
+  const [gridSize, setGridSize] = useState<GridSize>(32);
   const [activeTool, setActiveTool] = useState<ToolId>("pencil");
   const [activeColor, setActiveColor] = useState("#a11212");
   const [grid, setGrid] = useState<Grid>(() => createEmptyGrid(16));

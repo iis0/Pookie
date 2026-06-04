@@ -3,6 +3,7 @@
 import { InfoRow, TextInput } from "@/components/element";
 import { DEFAULT_PALETTE, type ToolId } from "../lib/consts";
 import ToolSection from "@/components/layout/ToolSection";
+import { Swatch } from "@/components/element/colour";
 
 interface PaletteSidebarProps {
   activeColor: string;
@@ -24,15 +25,7 @@ export default function PaletteSidebar({
       <ToolSection title="colour">
         {/* Active color preview */}
 
-        <div className="flex items-center gap-2.5 mb-4">
-          <div
-            className="w-8 h-8 shrink-0 border-1 border-red-faint"
-            style={{ background: activeColor }}
-          />
-          <span className="font-body text-[11px] text-soft-white-muted tracking-[0.5px]">
-            {activeColor.toUpperCase()}
-          </span>
-        </div>
+        <Swatch colour={activeColor} showLabel />
 
         {/* Palette grid */}
         <div className="grid grid-cols-4 gap-1">
@@ -73,7 +66,6 @@ export default function PaletteSidebar({
                 setActiveColor(e.target.value);
             }}
             maxLength={7}
-
           />
         </div>
       </ToolSection>
@@ -81,7 +73,11 @@ export default function PaletteSidebar({
       {/* Info blocks */}
       <div>
         <InfoRow label="tool" value={activeTool} />
-        <InfoRow label="history" value={`${historyLength} STEPS`} className="mt-2"/>
+        <InfoRow
+          label="history"
+          value={`${historyLength} STEPS`}
+          className="mt-2"
+        />
       </div>
     </div>
   );
